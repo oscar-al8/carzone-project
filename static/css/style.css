@@ -4455,7 +4455,7 @@ footer {
     background: rgba(0, 0, 0, 0.04) url(../img/bg-img-6.jpg) top left repeat;
     background-size: cover;
     width: 100%;
-    padding: 100px 0 70px;
+    padding: 0;
 }
 
 .service-box ul{

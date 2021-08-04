@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages, auth
 from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
+from contacts.models import Contact
 
 # Create your views here.
 
@@ -41,7 +43,7 @@ def register(request):
                     messages.error(request, 'The email is already registered!')
                     return redirect('register')
                 else:
-                    user = User.objects.create_user(first_name=firstname, last_name=lastname, username=username, email=email, password=password)
+                    user = User.objects.create(first_name=firstname, last_name=lastname, username=username, email=email, password=password)
                     user.save()
                     messages.success(request, 'Registered successfully!')
                     return redirect('login')
@@ -57,5 +59,10 @@ def logout(request):
         auth.logout(request)
         return redirect('home')
 
+@login_required(login_url = 'login')
 def dashboard(request):
-    return render(request, 'accounts/dashboard.html')
+    user_inquiry = Contact.objects.order_by('-create_date').filter(user_id=request.user.id)
+    data = {
+        'inquiries': user_inquiry
+    }
+    return render(request, 'accounts/dashboard.html', data)
